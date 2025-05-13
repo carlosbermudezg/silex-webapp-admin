@@ -11,9 +11,11 @@ const QuboLogo = ({mode}) => {
           ...styles.cube,
           background: isDarkMode ? 'linear-gradient(135deg, #64B5F6, #9575CD)' : 'linear-gradient(135deg, #64B5F6, #9575CD)', // Ajustamos el color según el tema
         }}
-      ></div>
+      >
+        <span style={{ color: isDarkMode ? '#FFF' : '#fafafa', fontSize:'32px', fontWeight:'bold' }}>A</span>
+      </div>
       <div style={styles.text}>
-        <span style={{ color: isDarkMode ? '#64B5F6' : '#2874a6' }}>Q</span><span style={{ color: isDarkMode ? '#fafafa' : '#222' }}>ubo</span>
+        <span style={{ color: isDarkMode ? '#fafafa' : '#222' }}>utentic</span>
       </div>
     </div>
   );
@@ -23,12 +25,15 @@ const styles = {
   logo: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '5px',
   },
   cube: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: '32px',
     height: '32px',
-    transform: 'rotate(45deg)',
+    // transform: 'rotate(45deg)',
     borderRadius: '6px',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
   },

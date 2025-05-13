@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import QuboLogo from './QuboLogo';
 import toast from 'react-hot-toast'; // Importar react-hot-toast
 
-const Login = () => {
+const Login = ({mode}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -70,6 +71,9 @@ const Login = () => {
           backgroundColor: 'background.paper',
         }}
       >
+        <div style={{ display:'flex', justifyContent:'center', marginBottom:10 }}>
+          <QuboLogo mode={mode}></QuboLogo>
+        </div>
         <Typography
           variant="body2"
           align="center"

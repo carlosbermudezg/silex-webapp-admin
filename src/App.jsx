@@ -25,12 +25,15 @@ import ReporteIngresosEgresos from './pages/reportes/ingresos-egresos/ReporteIng
 import ReporteUtilidad from './pages/reportes/utilidad/ReporteUtilidad';
 import ProtectedRoute from './components/ProtectedRoutes';
 import MainLayout from './layout/MainLayout';
+import UseFavicon from './components/UseFavicon';
 import { validarToken } from './utils/validarToken';
 import 'leaflet/dist/leaflet.css';
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [isAuth, setIsAuth] = useState(validarToken()); // Estado que se actualiza según el token
+
+  UseFavicon(darkMode);
 
   useEffect(() => {
     // Actualiza isAuth cuando el token cambie
@@ -77,7 +80,7 @@ const App = () => {
       <Router>
         <Routes>
           {/* Si el token es válido, redirigir al Dashboard */}
-          <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <Login />} />
+          <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <Login mode={darkMode} />} />
           
           {/* Rutas protegidas */}
           <Route element={<MainLayout toggleDarkMode={toggleDarkMode} themeMode={darkMode}/>}>
