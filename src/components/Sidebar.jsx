@@ -88,11 +88,10 @@ const Sidebar = ({ isSidebarOpen }) => {
           <ListItemIcon sx={iconStyle}><PointOfSale /></ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Caja" />}
         </ListItemButton>
-        {/* <ListItemButton sx={itemStyle} onClick={() => navigate('/gastos')}>
-          <ListItemIcon sx={iconStyle}><Receipt /></ListItemIcon>
-          {isSidebarOpen && <ListItemText primary="Gastos" />}
+        {/* <ListItemButton sx={itemStyle} onClick={() => navigate('/recorrido')}>
+          <ListItemIcon sx={iconStyle}><PointOfSale /></ListItemIcon>
+          {isSidebarOpen && <ListItemText primary="Recorrido" />}
         </ListItemButton> */}
-
         {/* Submenú Reportes */}
         <ListItemButton sx={itemStyle} onClick={() => handleToggle('reportes')}>
           <ListItemIcon sx={iconStyle}><BarChart /></ListItemIcon>
@@ -127,9 +126,9 @@ const Sidebar = ({ isSidebarOpen }) => {
             <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/ajustes/general')}>
               <ListItemText primary="General" />
             </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/ajustes/empresa')}>
+            {/* <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/ajustes/empresa')}>
               <ListItemText primary="Empresa" />
-            </ListItemButton>
+            </ListItemButton> */}
             <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/ajustes/oficinas')}>
               <ListItemText primary="Oficinas" />
             </ListItemButton>

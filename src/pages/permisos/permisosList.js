@@ -24,6 +24,9 @@ const permisosAgrupados = {
       { name: 'Agregar Egresos', permiso: 'addeg' },
       { name: 'Autorizar', permiso: 'autorize' },
       { name: 'Ver Caja', permiso: 'viewcj' },
+      { name: 'Bloquear Caja', permiso: 'bloqcj' },
+      { name: 'Cerrar Caja', permiso: 'cerrarcj' },
+      { name: 'Anular Abonos', permiso: 'nullab' },
     ],
     REPORTES: [
       { name: 'Ver Estado de Cuenta', permiso: 'viewStatusAccount' },

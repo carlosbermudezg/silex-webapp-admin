@@ -88,8 +88,6 @@ export default function Clientes() {
     fotos: [], // array de base64
   });
 
-  console.log(nuevoCliente)
-
   const token = localStorage.getItem('token');
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -258,19 +256,21 @@ export default function Clientes() {
                     <TableCell>Ruta</TableCell>
                     <TableCell>Teléfono</TableCell>
                     <TableCell>Dirección</TableCell>
+                    <TableCell>Buro</TableCell>
                     <TableCell>Acciones</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {clientes.map((cliente, index) => (
                     <TableRow key={index}>
-                      <TableCell align="center">C00{cliente.id}</TableCell>
+                      <TableCell align="center">CL{cliente.id}</TableCell>
                       <TableCell>{cliente.nombres}</TableCell>
                       <TableCell>{cliente.identificacion}</TableCell>
                       <TableCell>{cliente.nacionalidad}</TableCell>
                       <TableCell>{cliente.ruta?.nombre}</TableCell>
                       <TableCell>{cliente.telefono}</TableCell>
                       <TableCell>{cliente.direccion}</TableCell>
+                      <TableCell>{cliente.buro}</TableCell>
                       <TableCell align="center">
                         <Button
                           size="small"

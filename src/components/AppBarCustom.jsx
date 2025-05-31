@@ -137,9 +137,6 @@ const AppBarCustom = ({ toggleDarkMode, onToggleSidebar, themeMode }) => {
             size="small"
             sx={{ minWidth: 150 }}
           >
-            <MenuItem key="ofiall" value="ofiall">
-              Todas
-            </MenuItem>
             {oficinas.map((oficina) => (
               <MenuItem key={oficina.id} value={oficina.id}>
                 {oficina.nombre}
@@ -157,9 +154,6 @@ const AppBarCustom = ({ toggleDarkMode, onToggleSidebar, themeMode }) => {
             sx={{ minWidth: 150 }}
             disabled={oficinaSeleccionada === 'ofiall' || !rutas.length}
           >
-            <MenuItem key="rutall" value="rutall">
-              Todas
-            </MenuItem>
             {rutas.map((ruta) => (
               <MenuItem key={ruta.id} value={ruta.id}>
                 {ruta.nombre}

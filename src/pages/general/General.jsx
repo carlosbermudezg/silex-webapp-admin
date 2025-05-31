@@ -97,6 +97,7 @@ export default function General() {
 
   const [horaApertura, setHoraApertura] = React.useState('00:00:00');
   const [horaCierre, setHoraCierre] = React.useState('00:00:00');
+  const [horaGastos, setHoraGastos] = React.useState('00:00:00');
 
   const handleChangeTime = (event) => {
     const value = event.target.value;
@@ -207,12 +208,10 @@ export default function General() {
           Authorization: `Bearer ${token}`,
         }
       }
-    ).then((response)=>{
-      console.log(response.data)
+    ).then(()=>{
       toast.success('Configuración actualizada')
     })
-    .catch((error)=>{
-      console.log(error)
+    .catch(()=>{
       toast.error('Hubo un error al actualizar la configuración')
     })
   }
@@ -340,6 +339,7 @@ export default function General() {
       console.log(data)
       setHoraApertura(data[0].hora_apertura_caja)
       setHoraCierre(data[0].hora_cierre_caja)
+      setHoraGastos(data[0].hora_gastos)
       setConfigCaja(data[0])
     } catch (error) {
       console.log(error)
@@ -358,6 +358,7 @@ export default function General() {
         body: JSON.stringify({
           hora_cierre_caja: horaCierre,
           hora_apertura_caja: horaApertura,
+          hora_gastos: horaGastos
         }),
       });
   
@@ -399,7 +400,7 @@ export default function General() {
                   <Tab label="No laborable" {...a11yProps(2)} />
                   <Tab label="Ingresos" {...a11yProps(3)} />
                   <Tab label="Egresos" {...a11yProps(4)} />
-                  <Tab label="Buró" {...a11yProps(5)} />
+                  {/* <Tab label="Buró" {...a11yProps(5)} /> */}
                 </Tabs>
               </Box>
               <CustomTabPanel value={value} index={0}>
@@ -505,7 +506,7 @@ export default function General() {
                       />
                     </Grid>
                     <Grid size={3}>
-                      <Typography variant="body1">Porcentaje máximo de abono</Typography>
+                      <Typography variant="body1">Porcentaje máximo de abono de la deuda inicial</Typography>
                     </Grid>
                     <Grid size={3}>
                       <TextField
@@ -517,7 +518,7 @@ export default function General() {
                       />
                     </Grid>
                     <Grid size={3}>
-                      <Typography variant="body1">Porcentaje minimo de abono para Novación</Typography>
+                      <Typography variant="body1">Porcentaje minimo de deuda para Renovación</Typography>
                     </Grid>
                     <Grid size={3}>
                       <TextField
@@ -683,6 +684,18 @@ export default function General() {
                       size='small'
                       value={horaCierre.slice(0, 5)} // solo HH:mm para el input
                       onChange={(e)=> setHoraCierre(handleChangeTime(e))}
+                    />
+                  </Grid>
+                  <Grid size={4}>
+                    <Typography variant='body1'>Hora máxima para ingreso de gastos:</Typography>
+                  </Grid>
+                  <Grid size={8}>
+                    <TextField
+                      label="Hora de gastos"
+                      type="time"
+                      size='small'
+                      value={horaGastos.slice(0, 5)} // solo HH:mm para el input
+                      onChange={(e)=> setHoraGastos(handleChangeTime(e))}
                     />
                   </Grid>
                   <Grid size={12}>

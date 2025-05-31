@@ -11,8 +11,11 @@ import {
   Settings as SettingsIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   Edit as EditIcon,
-  Add as AddIcon
+  Add as AddIcon,
+  Cancel
 } from '@mui/icons-material';
+
+import creditos1 from '../general/BANKA1';
 
 import { Link } from 'react-router-dom';
 
@@ -59,10 +62,20 @@ const Creditos = () => {
   const [render, setRender] = React.useState(false);
 
   const [openModal, setOpenModal] = React.useState(false);
+  const [openModalAnular, setOpenModalAnular] = React.useState(false);
   const [selectedCredito, setSelectedCredito] = React.useState(null);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openMenu = Boolean(anchorEl);
+
+  creditos1.sort((a, b) => {
+    const fechaA = new Date(`${a.fecha}T${a.hora}`);
+    const fechaB = new Date(`${b.fecha}T${b.hora}`);
+    return fechaA - fechaB; // Orden ascendente (más antiguo primero)
+  });
+
+  console.log(creditos1)
+
 
   const token = localStorage.getItem('token');
 
@@ -78,6 +91,10 @@ const Creditos = () => {
     setSelectedCredito(null);
     setOpenModal(false);
   };
+
+  const anularCredito = async ()=>{
+    console.log(selectedCredito)
+  }
 
   const fetchCreditos = async () => {
     try {
@@ -183,20 +200,22 @@ const Creditos = () => {
                   <TableCell>Frecuencia</TableCell>
                   <TableCell>Monto</TableCell>
                   <TableCell>A pagar</TableCell>
+                  <TableCell>Saldo</TableCell>
                   <TableCell>Vencimiento</TableCell>
                   <TableCell>Estado</TableCell>
-                  {/* <TableCell>Acciones</TableCell> */}
+                  <TableCell>Acciones</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {creditos.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={9} align="center">
+                    <TableCell colSpan={10} align="center">
                       <Typography>No se encontraron créditos.</Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
                   creditos.map((credito) => {
+                    console.log(credito)
                     let estado;
                     let color;
                     const fecha = new Date(credito.fechaVencimiento); // la fecha que quieres comparar
@@ -221,11 +240,12 @@ const Creditos = () => {
                       <TableCell><Link to={`/clientes/perfil/${credito.clienteId}`}>{credito.cliente?.nombres}</Link></TableCell>
                       <TableCell>{credito.ruta?.nombre}</TableCell>
                       <TableCell>{credito.frecuencia_pago}</TableCell>
-                      <TableCell>$ {(credito.monto).toFixed(2)}</TableCell>
-                      <TableCell>$ {(credito.monto + credito.monto_interes_generado).toFixed(2)}</TableCell>
+                      <TableCell>$ {(credito.monto)}</TableCell>
+                      <TableCell>$ {(Number(credito.monto) + Number(credito.monto_interes_generado)).toFixed(2)}</TableCell>
+                      <TableCell>$ {(Number(credito.saldo_capital) + Number(credito.saldo_interes)).toFixed(2)}</TableCell>
                       <TableCell>{new Date(credito.fechaVencimiento).toLocaleDateString()}</TableCell>
                       <TableCell><Chip label={estado} color={color} /></TableCell>
-                      {/* <TableCell>
+                      <TableCell>
                         <Button
                           size="small"
                           variant="contained"
@@ -234,7 +254,7 @@ const Creditos = () => {
                         >
                           <SettingsIcon />
                         </Button>
-                      </TableCell> */}
+                      </TableCell>
                     </TableRow>
                     )
                   }))
@@ -259,10 +279,10 @@ const Creditos = () => {
       {/* Menú de acciones */}
       <StyledMenu anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
         <MenuItem onClick={() => {
-          setOpenModal(true);
+          setOpenModalAnular(true);
           handleCloseMenu();
         }}>
-          <EditIcon /> Editar
+          <Cancel/> Anular
         </MenuItem>
       </StyledMenu>
 
@@ -320,6 +340,19 @@ const Creditos = () => {
         <DialogActions>
           <Button onClick={handleCloseModal}>Cancelar</Button>
           <Button onClick={handleSaveCredito} color="primary">Guardar</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Modal Anular crédito */}
+      <Dialog open={openModalAnular} onClose={()=> setOpenModalAnular(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Anular Crédito</DialogTitle>
+        <DialogContent>
+          <Typography>¿Está seguro que desea anular este crédito?</Typography>
+          <Typography variant='caption' color='error'>Esta acción no se puede revertir</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=> setOpenModalAnular(false)}>Cancelar</Button>
+          <Button variant='contained' onClick={()=> anularCredito()} color="error">Anular</Button>
         </DialogActions>
       </Dialog>
     </Box>

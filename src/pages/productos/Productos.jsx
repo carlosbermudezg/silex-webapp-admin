@@ -79,6 +79,7 @@ export default function Productos() {
         }
       );
       const data = await res.json();
+      console.log(data)
       setProductos(data.data || []);
       setTotalPages(data.totalPages || 1);
     } catch (err) {
