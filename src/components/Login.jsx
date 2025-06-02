@@ -21,8 +21,9 @@ const Login = ({mode}) => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}login/admin`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
+        credentials: 'include',  // IMPORTANTE si el backend usa cookies o sesiones
         body: JSON.stringify({ email, password })
       });
 
