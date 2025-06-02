@@ -23,7 +23,6 @@ const Login = ({mode}) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',  // IMPORTANTE si el backend usa cookies o sesiones
         body: JSON.stringify({ email, password })
       });
 
