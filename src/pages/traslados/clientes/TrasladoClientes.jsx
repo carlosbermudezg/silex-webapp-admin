@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 import {
   Box,
   Card,
@@ -16,53 +18,96 @@ import {
 } from '@mui/material';
 
 const TrasladarClientes = () => {
-  // Datos ficticios
-  const clients = [
-    { id: '1', name: 'Juan Pérez', routeId: 'r1' },
-    { id: '2', name: 'Ana Gómez', routeId: 'r2' },
-    { id: '3', name: 'Carlos Ruiz', routeId: 'r1' },
-    { id: '4', name: 'Lucía Fernández', routeId: 'r3' },
-  ];
+  const API_BASE = `${import.meta.env.VITE_API_URL}`;
+  const token = localStorage.getItem('token');
 
-  const offices = [
-    {
-      id: 'of1',
-      name: 'Oficina Centro',
-      routes: [
-        { id: 'r1', name: 'Ruta A' },
-        { id: 'r2', name: 'Ruta B' },
-      ],
-    },
-    {
-      id: 'of2',
-      name: 'Oficina Norte',
-      routes: [
-        { id: 'r3', name: 'Ruta C' },
-        { id: 'r4', name: 'Ruta D' },
-      ],
-    },
-  ];
-
+  const [oficinas, setOficinas] = useState([]);
   const [selectedClients, setSelectedClients] = useState([]);
   const [sourceOffice, setSourceOffice] = useState('');
   const [sourceRoute, setSourceRoute] = useState('');
   const [targetOffice, setTargetOffice] = useState('');
   const [targetRoute, setTargetRoute] = useState('');
   const [reason, setReason] = useState('');
+  const [clients, setClients] = useState([]);
+
+  const getOficinas = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}oficinas/rutas`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setOficinas(response.data);
+    } catch (error) {
+      toast.error('Ha ocurrido un error al cargar las oficinas', { position: 'bottom-center' });
+    }
+  };
 
   const getRoutesForOffice = (officeId) =>
-    offices.find((o) => o.id === officeId)?.routes || [];
+    oficinas.find((o) => o.id === parseInt(officeId))?.rutas || [];
 
-  const filteredClients = clients.filter((c) => c.routeId === sourceRoute);
+  useEffect(() => {
+    getOficinas();
+  }, []);
 
-  const handleTransfer = () => {
-    alert(JSON.stringify({
-      clients: selectedClients,
-      from: { office: sourceOffice, route: sourceRoute },
-      to: { office: targetOffice, route: targetRoute },
-      reason,
-    }, null, 2));
-  };
+  useEffect(() => {
+    if (sourceRoute) {
+      axios
+        .get(`${API_BASE}clientes/ruta-wo/${sourceRoute}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setClients(res.data);
+        })
+        .catch(() => {
+          toast.error('Error al cargar los clientes', { position: 'bottom-center' });
+          setClients([]);
+        });
+    } else {
+      setClients([]);
+    }
+  }, [sourceRoute]);
+
+  const filteredClients = clients;
+
+  const handleTransfer = async () => {
+    if (
+      selectedClients.length === 0 ||
+      !sourceOffice ||
+      !sourceRoute ||
+      !targetOffice ||
+      !targetRoute ||
+      !reason
+    ) {
+      toast.error('Por favor completa todos los campos');
+      return;
+    }
+  
+    const payload = {
+      oficina_origen_id: parseInt(sourceOffice),
+      ruta_origen_id: parseInt(sourceRoute),
+      cliente_ids: selectedClients,
+      oficina_destino_id: parseInt(targetOffice),
+      ruta_destino_id: parseInt(targetRoute),
+      motivo_traslado: reason,
+    };
+  
+    try {
+      await axios.post(`${API_BASE}traslado/clientes`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      toast.success('Clientes trasladados con éxito');
+      // Limpiar estados después de éxito
+      setSelectedClients([]);
+      setSourceOffice('');
+      setSourceRoute('');
+      setTargetOffice('');
+      setTargetRoute('');
+      setReason('');
+      setClients([]);
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al trasladar clientes');
+    }
+  };  
 
   return (
     <Box>
@@ -83,11 +128,12 @@ const TrasladarClientes = () => {
                     setSourceOffice(e.target.value);
                     setSourceRoute('');
                     setSelectedClients([]);
+                    setClients([]);
                   }}
                 >
-                  {offices.map((office) => (
+                  {oficinas.map((office) => (
                     <MenuItem key={office.id} value={office.id}>
-                      {office.name}
+                      {office.nombre}
                     </MenuItem>
                   ))}
                 </Select>
@@ -103,12 +149,12 @@ const TrasladarClientes = () => {
                 >
                   {getRoutesForOffice(sourceOffice).map((route) => (
                     <MenuItem key={route.id} value={route.id}>
-                      {route.name}
+                      {route.nombre}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-              <FormControl fullWidth sx={{ mb: 2 }} disabled={!sourceRoute}>
+              <FormControl sx={{ width: '440px' }} disabled={!sourceRoute}>
                 <InputLabel>Clientes</InputLabel>
                 <Select
                   multiple
@@ -117,14 +163,42 @@ const TrasladarClientes = () => {
                   renderValue={(selected) =>
                     filteredClients
                       .filter((c) => selected.includes(c.id))
-                      .map((c) => c.name)
+                      .map((c) => c.nombres)
                       .join(', ')
                   }
                 >
+                  <MenuItem value="all">
+                    <Checkbox
+                      checked={
+                        selectedClients.length > 0 &&
+                        filteredClients.every((c) =>
+                          selectedClients.includes(c.id)
+                        )
+                      }
+                      indeterminate={
+                        selectedClients.length > 0 &&
+                        filteredClients.some((c) =>
+                          selectedClients.includes(c.id)
+                        ) &&
+                        !filteredClients.every((c) =>
+                          selectedClients.includes(c.id)
+                        )
+                      }
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedClients(filteredClients.map((c) => c.id));
+                        } else {
+                          setSelectedClients([]);
+                        }
+                      }}
+                    />
+                    <ListItemText primary="Seleccionar todos" />
+                  </MenuItem>
+
                   {filteredClients.map((client) => (
                     <MenuItem key={client.id} value={client.id}>
                       <Checkbox checked={selectedClients.includes(client.id)} />
-                      <ListItemText primary={client.name} />
+                      <ListItemText primary={client.nombres} />
                     </MenuItem>
                   ))}
                 </Select>
@@ -142,9 +216,9 @@ const TrasladarClientes = () => {
                     setTargetRoute('');
                   }}
                 >
-                  {offices.map((office) => (
+                  {oficinas.map((office) => (
                     <MenuItem key={office.id} value={office.id}>
-                      {office.name}
+                      {office.nombre}
                     </MenuItem>
                   ))}
                 </Select>
@@ -157,7 +231,7 @@ const TrasladarClientes = () => {
                 >
                   {getRoutesForOffice(targetOffice).map((route) => (
                     <MenuItem key={route.id} value={route.id}>
-                      {route.name}
+                      {route.nombre}
                     </MenuItem>
                   ))}
                 </Select>

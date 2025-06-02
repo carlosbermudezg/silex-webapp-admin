@@ -112,7 +112,7 @@ export default function Caja() {
   const [modalFactura, setModalFactura] = useState(false)
 
   const token = localStorage.getItem('token');
-  const API_BASE = `${import.meta.env.VITE_API_URL}`; // Cambia según tu IP
+  const API_BASE = `${import.meta.env.VITE_API_URL}`;
   const rutaId = useLocalStorageValue('rutaId');
 
   const [anchorEl, setAnchorEl] = useState(null);

@@ -17,7 +17,7 @@ const permisosAgrupados = {
       { name: 'Archivar Créditos', permiso: 'archcr' },
       { name: 'Editar Créditos', permiso: 'edircr' },
       { name: 'Anular Créditos', permiso: 'nullcr' },
-      { name: 'Generar Novación', permiso: 'mknovcr' },
+      { name: 'Renovar Créditos', permiso: 'mknovcr' },
     ],
     CAJA: [
       { name: 'Agregar Ingresos', permiso: 'addin' },

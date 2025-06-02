@@ -153,11 +153,11 @@ const Creditos = () => {
   return (
     <Box sx={{ padding: 3 }}>
       <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-        <Grid item size={6}>
+        <Grid item size={8}>
           <Typography variant='h5'>Créditos</Typography>
         </Grid>
-        <Grid container size={6}>
-        <Grid item size={8}>
+        <Grid container size={4}>
+        <Grid item size={12}>
           <TextField
             label="Buscar (estado, ruta, frecuencia)"
             variant="outlined"
@@ -167,7 +167,7 @@ const Creditos = () => {
             fullWidth
           />
         </Grid>
-        <Grid item size={4}>
+        {/* <Grid item size={4}>
           <Button
             fullWidth
             startIcon={<AddIcon />}
@@ -186,7 +186,7 @@ const Creditos = () => {
           >
             Agregar
           </Button>
-        </Grid>
+        </Grid> */}
         </Grid>
 
         <Grid item size={12}>

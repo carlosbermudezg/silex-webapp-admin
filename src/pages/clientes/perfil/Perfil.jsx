@@ -282,8 +282,8 @@ export default function Perfil() {
                     <TableCell>{vence}</TableCell>
                     <TableCell align='center'>{cuotasVencidas.length}</TableCell>
                     <TableCell>{row.interes}%</TableCell>
-                    <TableCell>$ {(row.monto).toFixed(2)}</TableCell>
-                    <TableCell>$ {(row.saldo_capital + row.saldo_interes).toFixed(2)}</TableCell>
+                    <TableCell>$ {(row.monto)}</TableCell>
+                    <TableCell>$ {(Number(row.saldo_capital) + Number(row.saldo_interes)).toFixed(2)}</TableCell>
                   </TableRow>
                 )
               })}

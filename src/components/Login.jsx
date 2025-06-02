@@ -35,7 +35,7 @@ const Login = ({mode}) => {
         // Mostrar un toast de éxito y redirigir al dashboard
         toast.success('¡Inicio de sesión exitoso!', { id: loadingToast, duration: 1000 });
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate('/clientes');
         }, 2000); // Redirigir después de un pequeño retraso
       } else {
         // Mostrar un toast de error

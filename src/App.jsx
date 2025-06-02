@@ -85,17 +85,17 @@ const App = () => {
           {/* Rutas protegidas */}
           <Route element={<MainLayout toggleDarkMode={toggleDarkMode} themeMode={darkMode}/>}>
             <Route element={<ProtectedRoute isAuth={isAuth} />}>
-              <Route path="/dashboard" element={<Dashboard />} />
+              {/* <Route path="/dashboard" element={<Dashboard />} /> */}
               <Route path="/clientes" element={<Clientes />} />
               <Route path="/clientes/perfil/:id" element={<Perfil />} />
               <Route path="/productos" element={<Productos />} />
               <Route path="/creditos" element={<Creditos />} />
               <Route path="/caja" element={<Caja />} />
-              <Route path="/gastos" element={<Gastos />} />
-              <Route path="/reportes/estado-cuenta" element={<EstadoCuenta />} />
+              {/* <Route path="/gastos" element={<Gastos />} /> */}
+              {/* <Route path="/reportes/estado-cuenta" element={<EstadoCuenta />} />
               <Route path="/reportes/creditos" element={<ReporteCreditos />} />
               <Route path="/reportes/ingresos-egresos" element={<ReporteIngresosEgresos />} />
-              <Route path="/reportes/utilidad" element={<ReporteUtilidad />} />
+              <Route path="/reportes/utilidad" element={<ReporteUtilidad />} /> */}
               <Route path="/ajustes/general" element={<General />} />
               <Route path="/ajustes/oficinas" element={<Oficinas />} />
               <Route path="/ajustes/rutas" element={<Rutas/>} />
