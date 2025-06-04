@@ -68,10 +68,10 @@ const Sidebar = ({ isSidebarOpen }) => {
         }}
       >
         {/* Enlaces simples */}
-        {/* <ListItemButton sx={itemStyle} onClick={() => navigate('/dashboard')}>
+        <ListItemButton sx={itemStyle} onClick={() => navigate('/dashboard')}>
           <ListItemIcon sx={iconStyle}><Dashboard /></ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Dashboard" />}
-        </ListItemButton> */}
+        </ListItemButton>
         <ListItemButton sx={itemStyle} onClick={() => navigate('/clientes')}>
           <ListItemIcon sx={iconStyle}><People /></ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Clientes" />}
@@ -93,7 +93,7 @@ const Sidebar = ({ isSidebarOpen }) => {
           {isSidebarOpen && <ListItemText primary="Recorrido" />}
         </ListItemButton> */}
         {/* Submenú Reportes */}
-        {/* <ListItemButton sx={itemStyle} onClick={() => handleToggle('reportes')}>
+        <ListItemButton sx={itemStyle} onClick={() => handleToggle('reportes')}>
           <ListItemIcon sx={iconStyle}><BarChart /></ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Reportes" />}
           {isSidebarOpen && (openReportes ? <ExpandLess /> : <ExpandMore />)}
@@ -113,7 +113,7 @@ const Sidebar = ({ isSidebarOpen }) => {
               <ListItemText primary="Utilidad" />
             </ListItemButton>
           </List>
-        </Collapse> */}
+        </Collapse>
 
         {/* Submenú Ajustes */}
         <ListItemButton sx={itemStyle} onClick={() => handleToggle('ajustes')}>
