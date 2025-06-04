@@ -80,6 +80,9 @@ export default function General() {
   const [maxCreditos, setMaxCreditos] = React.useState('');
   const [frecuenciaPago, setFrecuenciaPago] = React.useState([]);
   const [configCaja, setConfigCaja] = React.useState({});
+  const [excluirSabados, setExcluirSabados] = React.useState(false);
+  const [excluirDomingos, setExcluirDomingos] = React.useState(false);
+
 
   //Default Values
   const [montoMinimoDefault, setMontoMinimoDefault] = React.useState('');
@@ -106,6 +109,42 @@ export default function General() {
     const formatted = `${hh}:${mm}:00`;
     return formatted;
   };
+
+  const handleToggleDiaNoLaborable = async (tipoDia, checked) => {
+    if (tipoDia === 'sabado') setExcluirSabados(checked);
+    if (tipoDia === 'domingo') setExcluirDomingos(checked);
+    const payload = {
+      excluir_sabados: tipoDia === 'sabado' ? checked : excluirSabados,
+      excluir_domingos: tipoDia === 'domingo' ? checked : excluirDomingos,
+    }
+  
+    try {
+      await axios.patch(`${import.meta.env.VITE_API_URL}config/dias-no-laborables`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
+      toast.success('Configuración actualizada', { position:'bottom-center' })
+    } catch (error) {
+      toast.success('Error al guardar configuración:', { position:'bottom-center' })
+    }
+  };
+
+  React.useEffect(() => {
+    async function fetchConfig() {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}config/dias-no-laborables-config`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setExcluirSabados(res.data.excluir_sabados);
+        setExcluirDomingos(res.data.excluir_domingos);
+      } catch (error) {
+        toast.error('Error al cargar configuración', { position: 'bottom-center' });
+      }
+    }
+    fetchConfig();
+  }, []);
 
   const token = localStorage.getItem('token');
 
@@ -723,6 +762,30 @@ export default function General() {
                     >
                       Agregar
                     </Button>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} alignItems="center" sx={{ mt: 1 }}>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={excluirSabados}
+                          onChange={(e) => handleToggleDiaNoLaborable('sabado', e.target.checked)}
+                        />
+                      }
+                      label="Excluir sábados"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={excluirDomingos}
+                          onChange={(e) => handleToggleDiaNoLaborable('domingo', e.target.checked)}
+                        />
+                      }
+                      label="Excluir domingos"
+                    />
                   </Grid>
                 </Grid>
                 <TableContainer component={Paper}>

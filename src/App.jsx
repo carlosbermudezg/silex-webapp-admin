@@ -27,6 +27,7 @@ import ProtectedRoute from './components/ProtectedRoutes';
 import MainLayout from './layout/MainLayout';
 import UseFavicon from './components/UseFavicon';
 import { validarToken } from './utils/validarToken';
+import Backup from './pages/backup/Backup';
 import 'leaflet/dist/leaflet.css';
 
 const App = () => {
@@ -105,6 +106,7 @@ const App = () => {
               <Route path="/ajustes/permisos/addpermiso" element={<AddPermisos/>} />
               <Route path="/ajustes/permisos/editpermiso/:id" element={<EditPermisos/>} />
               <Route path="/ajustes/usuarios" element={<Usuarios/>} />
+              <Route path="/ajustes/backup" element={<Backup/>} />
             </Route>
           </Route>
         </Routes>

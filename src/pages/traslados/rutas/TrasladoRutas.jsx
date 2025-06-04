@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 import {
   Box,
   Card,
@@ -11,57 +13,62 @@ import {
   InputLabel,
   FormControl,
   Grid,
-  Checkbox,
-  ListItemText,
 } from '@mui/material';
 
 const TrasladarRutas = () => {
-  // Datos ficticios
-  const clients = [
-    { id: '1', name: 'Juan Pérez', routeId: 'r1' },
-    { id: '2', name: 'Ana Gómez', routeId: 'r2' },
-    { id: '3', name: 'Carlos Ruiz', routeId: 'r1' },
-    { id: '4', name: 'Lucía Fernández', routeId: 'r3' },
-  ];
+  const API_BASE = `${import.meta.env.VITE_API_URL}`;
+  const token = localStorage.getItem('token');
 
-  const offices = [
-    {
-      id: 'of1',
-      name: 'Oficina Centro',
-      routes: [
-        { id: 'r1', name: 'Ruta A' },
-        { id: 'r2', name: 'Ruta B' },
-      ],
-    },
-    {
-      id: 'of2',
-      name: 'Oficina Norte',
-      routes: [
-        { id: 'r3', name: 'Ruta C' },
-        { id: 'r4', name: 'Ruta D' },
-      ],
-    },
-  ];
-
-  const [selectedClients, setSelectedClients] = useState([]);
+  const [oficinas, setOficinas] = useState([]);
   const [sourceOffice, setSourceOffice] = useState('');
   const [sourceRoute, setSourceRoute] = useState('');
   const [targetOffice, setTargetOffice] = useState('');
-  const [targetRoute, setTargetRoute] = useState('');
   const [reason, setReason] = useState('');
 
+  const getOficinas = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}oficinas/rutas`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setOficinas(response.data);
+    } catch (error) {
+      toast.error('Error al cargar las oficinas', { position: 'bottom-center' });
+    }
+  };
+
+  useEffect(() => {
+    getOficinas();
+  }, []);
+
   const getRoutesForOffice = (officeId) =>
-    offices.find((o) => o.id === officeId)?.routes || [];
+    oficinas.find((o) => o.id === parseInt(officeId))?.rutas || [];
 
-  const filteredClients = clients.filter((c) => c.routeId === sourceRoute);
+  const handleTransfer = async () => {
+    if (!sourceOffice || !sourceRoute || !targetOffice || !reason) {
+      toast.error('Por favor completa todos los campos');
+      return;
+    }
 
-  const handleTransfer = () => {
-    alert(JSON.stringify({
-      clients: selectedClients,
-      from: { office: sourceOffice, route: sourceRoute },
-      to: { office: targetOffice, route: targetRoute },
-      reason,
-    }, null, 2));
+    const payload = {
+      oficina_origen_id: parseInt(sourceOffice),
+      ruta_id: parseInt(sourceRoute),
+      oficina_destino_id: parseInt(targetOffice),
+      motivo_traslado: reason,
+    };
+
+    try {
+      await axios.post(`${API_BASE}traslado/rutas`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      toast.success('Ruta trasladada con éxito');
+      setSourceOffice('');
+      setSourceRoute('');
+      setTargetOffice('');
+      setReason('');
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al trasladar la ruta');
+    }
   };
 
   return (
@@ -69,11 +76,10 @@ const TrasladarRutas = () => {
       <Card>
         <CardContent>
           <Typography variant="h5" gutterBottom>
-            Trasladar Rutas
+            Trasladar Ruta de Oficina
           </Typography>
 
           <Grid container spacing={2}>
-            {/* Oficina y Ruta de Origen */}
             <Grid item size={6} gap={10}>
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel>Oficina Origen</InputLabel>
@@ -82,12 +88,11 @@ const TrasladarRutas = () => {
                   onChange={(e) => {
                     setSourceOffice(e.target.value);
                     setSourceRoute('');
-                    setSelectedClients([]);
                   }}
                 >
-                  {offices.map((office) => (
+                  {oficinas.map((office) => (
                     <MenuItem key={office.id} value={office.id}>
-                      {office.name}
+                      {office.nombre}
                     </MenuItem>
                   ))}
                 </Select>
@@ -96,75 +101,33 @@ const TrasladarRutas = () => {
                 <InputLabel>Ruta Origen</InputLabel>
                 <Select
                   value={sourceRoute}
-                  onChange={(e) => {
-                    setSourceRoute(e.target.value);
-                    setSelectedClients([]);
-                  }}
+                  onChange={(e) => setSourceRoute(e.target.value)}
                 >
                   {getRoutesForOffice(sourceOffice).map((route) => (
                     <MenuItem key={route.id} value={route.id}>
-                      {route.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl fullWidth sx={{ mb: 2 }} disabled={!sourceRoute}>
-                <InputLabel>Clientes</InputLabel>
-                <Select
-                  multiple
-                  value={selectedClients}
-                  onChange={(e) => setSelectedClients(e.target.value)}
-                  renderValue={(selected) =>
-                    filteredClients
-                      .filter((c) => selected.includes(c.id))
-                      .map((c) => c.name)
-                      .join(', ')
-                  }
-                >
-                  {filteredClients.map((client) => (
-                    <MenuItem key={client.id} value={client.id}>
-                      <Checkbox checked={selectedClients.includes(client.id)} />
-                      <ListItemText primary={client.name} />
+                      {route.nombre}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
 
-            {/* Clientes de la ruta origen */}
             <Grid item size={6}>
-              <FormControl sx={{ mb: 2 }} fullWidth>
+              <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel>Oficina Destino</InputLabel>
                 <Select
                   value={targetOffice}
-                  onChange={(e) => {
-                    setTargetOffice(e.target.value);
-                    setTargetRoute('');
-                  }}
+                  onChange={(e) => setTargetOffice(e.target.value)}
                 >
-                  {offices.map((office) => (
+                  {oficinas.map((office) => (
                     <MenuItem key={office.id} value={office.id}>
-                      {office.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl sx={{ mb: 2 }} fullWidth disabled={!targetOffice}>
-                <InputLabel>Ruta Destino</InputLabel>
-                <Select
-                  value={targetRoute}
-                  onChange={(e) => setTargetRoute(e.target.value)}
-                >
-                  {getRoutesForOffice(targetOffice).map((route) => (
-                    <MenuItem key={route.id} value={route.id}>
-                      {route.name}
+                      {office.nombre}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
 
-            {/* Motivo */}
             <Grid item size={12}>
               <TextField
                 label="Motivo del Traslado"
@@ -176,7 +139,6 @@ const TrasladarRutas = () => {
               />
             </Grid>
 
-            {/* Botón */}
             <Grid item size={12}>
               <Button
                 variant="contained"
@@ -184,11 +146,9 @@ const TrasladarRutas = () => {
                 fullWidth
                 onClick={handleTransfer}
                 disabled={
-                  selectedClients.length === 0 ||
                   !sourceOffice ||
                   !sourceRoute ||
                   !targetOffice ||
-                  !targetRoute ||
                   !reason
                 }
               >
