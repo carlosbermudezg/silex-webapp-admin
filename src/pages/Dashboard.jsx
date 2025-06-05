@@ -10,13 +10,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import CardActionArea from '@mui/material/CardActionArea';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
@@ -37,52 +30,6 @@ const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490, 3000, 2000, 2780, 1890,
 const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300, 3000, 9800, 3908, 4800, 3800];
 const xLabels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
-// Dashboard Cards
-const cards = [
-  {
-    id: 1,
-    title: 'Créditos Activos',
-    description: <Chip color="info" icon={<CreditScoreIcon />} label="122" variant="outlined" />,
-  },
-  {
-    id: 2,
-    title: 'Morosos',
-    description: <Chip color="warning" icon={<PersonOffIcon />} label="25" variant="outlined" />,
-  },
-  {
-    id: 3,
-    title: 'Cartera',
-    description: <Chip color="success" icon={<AttachMoneyIcon />} label="4251" variant="outlined" />,
-  }
-];
-
-const cards1 = [
-  {
-    id: 1,
-    title: 'Caja',
-    description: <Chip color="success" icon={<CreditScoreIcon />} label="122" variant="outlined" />,
-  },
-  {
-    id: 2,
-    title: 'Gastos',
-    description: <Chip color="error" icon={<PersonOffIcon />} label="25" variant="outlined" />,
-  },
-  {
-    id: 3,
-    title: 'Recaudación',
-    description: <Chip color="success" icon={<AttachMoneyIcon />} label="456" variant="outlined" />,
-  }
-];
-
-
-const usuarios = [
-  { nombre: "Juan Pérez", telefono: "123456789", creditosActivos: 5, creditosVencidos: 2, saldoCaja: 1500, totalRecaudado: 200, gastosDiarios: 50 },
-  { nombre: "Ana Gómez", telefono: "987654321", creditosActivos: 3, creditosVencidos: 1, saldoCaja: 2300, totalRecaudado: 300, gastosDiarios: 60 },
-  { nombre: "Carlos López", telefono: "555123456", creditosActivos: 7, creditosVencidos: 0, saldoCaja: 5000, totalRecaudado: 1500, gastosDiarios: 100 },
-  { nombre: "María Fernández", telefono: "666789123", creditosActivos: 2, creditosVencidos: 4, saldoCaja: 1800, totalRecaudado: 400, gastosDiarios: 120 },
-  { nombre: "Luis Rodríguez", telefono: "777321654", creditosActivos: 4, creditosVencidos: 3, saldoCaja: 3500, totalRecaudado: 700, gastosDiarios: 80 }
-];
-
 const StyledText = styled('text')(({ theme }) => ({
   fill: theme.palette.text.primary,
   textAnchor: 'middle',
@@ -97,27 +44,86 @@ const actions = [
   { icon: <ShareIcon />, name: 'Share' },
 ];
 
+import { useLocalStorageValue } from '../hooks/useLocalStorageValue';
 export default function Dashboard() {
   const [radius] = useState(50);
   const [itemNb] = useState(4);
   const [skipAnimation] = useState(false);
   const [selectedCard, setSelectedCard] = useState(0);
+  const [dataDash, setDataDash] = useState({})
+  const [caja, setCaja] = useState({})
 
-  const token = localStorage.getItem('token')
+  const API_BASE = `${import.meta.env.VITE_API_URL}`;
+  const token = localStorage.getItem('token');
+  const rutaId = useLocalStorageValue('rutaId');
+  console.log(rutaId)
 
-  const fetchCredits = async()=>{
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-    })
-
-    console.log(res)
+  const getDataDash = async()=>{
+    try {
+      const res = await axios.get(`${API_BASE}creditos/datadash?id=${rutaId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log(res)
+      setDataDash(res.data)
+    } catch (err) {
+      console.log(err)
+      setDataDash({})
+    }
   }
 
+  // Obtener el estado de la caja
+  const obtenerCaja = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}caja/ruta/${rutaId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCaja(response.data)
+    } catch (err) {
+      // toast.error(err.response.data)
+    }
+  };
+
+  // Dashboard Cards
+  const cards = [
+    {
+      id: 1,
+      title: 'Créditos Activos',
+      description: <Chip color="info" icon={<CreditScoreIcon />} label={`${dataDash.total_impagos}`} variant="outlined" />,
+    },
+    {
+      id: 2,
+      title: 'Morosos',
+      description: <Chip color="warning" icon={<PersonOffIcon />} label="0" variant="outlined" />,
+    },
+    {
+      id: 3,
+      title: 'Cartera',
+      description: <Chip color="success" icon={<AttachMoneyIcon />} label={`${dataDash.cartera}`} variant="outlined" />,
+    }
+  ];
+
+  const cards1 = [
+    {
+      id: 1,
+      title: 'Caja',
+      description: <Chip color="success" icon={<AttachMoneyIcon />} label={`${caja.saldoActual}`} variant="outlined" />,
+    },
+    {
+      id: 2,
+      title: 'Gastos',
+      description: <Chip color="error" icon={<PersonOffIcon />} label="0" variant="outlined" />,
+    },
+    {
+      id: 3,
+      title: 'Recaudación',
+      description: <Chip color="success" icon={<AttachMoneyIcon />} label="0" variant="outlined" />,
+    }
+  ];
+
   useEffect(()=>{
-    fetchCredits()
-  },[])
+    getDataDash()
+    obtenerCaja()
+  },[rutaId])
 
   function PieCenterLabel({ children }) {
     const { width, height, left, top } = useDrawingArea();
