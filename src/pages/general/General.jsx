@@ -230,7 +230,7 @@ export default function General() {
     const body = {
         monto_minimo : montoMinimoDefault,
         monto_maximo : montoMaximoDefault,
-        plazo_minimo : plazoMaximoDefault,
+        plazo_minimo : plazoMinimoDefault,
         plazo_maximo : plazoMaximoDefault,
         interes : interesDefault,
         max_credits : maxCreditosDefault,

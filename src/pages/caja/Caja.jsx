@@ -64,14 +64,6 @@ import axios from 'axios'
 import { useLocalStorageValue } from '../../hooks/useLocalStorageValue';
 
 export default function Caja() {
-  const [movimientosPendientes, setMovimientosPendientes] = useState([]);
-  const [historial, setHistorial] = useState([]);
-
-  const [rutas, setRutas] = useState([
-    { id: 1, nombre: 'Ruta 1' },
-    { id: 2, nombre: 'Ruta 2' },
-    { id: 3, nombre: 'Ruta 3' },
-  ]);
   const [modalIngresoOpen, setModalIngresoOpen] = useState(false);
   const [modalEgresoOpen, setModalEgresoOpen] = useState(false);
   const [modalAutorizarOpen, setModalAutorizarOpen] = useState(false);
@@ -81,10 +73,6 @@ export default function Caja() {
   const [abonoSelected, setAbonoSelected] = useState({});
   const [gastoSelected, setGastoSelected] = useState({});
   const [modalCierreOpen, setModalCierreOpen] = useState(false);
-  const [bloqueoCaja, setBloqueoCaja] = useState(null);
-  const [nuevaRuta, setNuevaRuta] = useState('');
-  const [monto, setMonto] = useState('');
-  const [descripcion, setDescripcion] = useState('');
   const [loading, setLoading] = useState(true);
   const [render, setRender] = useState(false);
   const [egresosTurno, setEgresosTurno] = useState([])
@@ -203,15 +191,17 @@ export default function Caja() {
 
   // Obtener las categorias de egresos
   const getEgresosByTurno = async (id) => {
-    try {
-      const res = await axios.get(`${API_BASE}caja/egresos-turno/${id}?page=${pageEgresos}&limit=5`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setEgresosTurno(res.data.data); // Los movimientos de la página actual
-      setTotalPagesEgresos(res.data.totalPages)
-    } catch (err) {
-      // console.error(err);
-    }
+      try {
+        const res = await axios.get(`${API_BASE}caja/egresos-turno/${id}?page=${pageEgresos}&limit=5`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setEgresosTurno(res.data.data); // Los movimientos de la página actual
+        setTotalPagesEgresos(res.data.totalPages)
+      } catch (err) {
+        console.log('error')
+        setEgresosTurno([])
+        // console.error(err);
+      }
   };
 
   // Obtener las categorias de egresos
@@ -223,6 +213,7 @@ export default function Caja() {
       setTotalPagesAbonos(res.data.totalPages)
       setAbonosTurno(res.data.data); // Los movimientos de la página actual
     } catch (err) {
+      setAbonosTurno([])
       // console.error(err);
     }
   };

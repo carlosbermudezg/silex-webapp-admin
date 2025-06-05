@@ -56,7 +56,7 @@ const AppBarCustom = ({ toggleDarkMode, onToggleSidebar, themeMode }) => {
 
   const fetchOficinas = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}oficinas?page=1&limit=10`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}oficinas?page=1&limit=100`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
