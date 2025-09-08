@@ -68,12 +68,11 @@ const AppBarCustom = ({ toggleDarkMode, onToggleSidebar, themeMode }) => {
       const savedOficina = data.find((o) => o.id.toString() === oficinaSeleccionada);
       if (savedOficina) {
         setRutas(savedOficina.rutas || []);
-
         // Restaurar ruta si aún es válida
         const rutaValida = savedOficina.rutas.find(r => r.id.toString() === rutaSeleccionada);
         if (!rutaValida) {
-          setRutaSeleccionada('');
-          localStorage.removeItem('rutaId');
+          setRutaSeleccionada(savedOficina.rutas[0].id);
+          localStorage.setItem('rutaId', savedOficina.rutas[0].id);
         }
       }
     } catch (error) {

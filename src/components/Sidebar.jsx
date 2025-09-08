@@ -5,7 +5,7 @@ import {
 import {
   Dashboard, People, Inventory, CreditCard, PointOfSale, Receipt,
   BarChart, Settings, ExpandLess, ExpandMore, Business, LocationOn,
-  Map, Lock, Group
+  Map, Lock, Group, TwoWheeler
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -88,10 +88,10 @@ const Sidebar = ({ isSidebarOpen }) => {
           <ListItemIcon sx={iconStyle}><PointOfSale /></ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Caja" />}
         </ListItemButton>
-        {/* <ListItemButton sx={itemStyle} onClick={() => navigate('/recorrido')}>
-          <ListItemIcon sx={iconStyle}><PointOfSale /></ListItemIcon>
+        <ListItemButton sx={itemStyle} onClick={() => navigate('/recorrido')}>
+          <ListItemIcon sx={iconStyle}><TwoWheeler /></ListItemIcon>
           {isSidebarOpen && <ListItemText primary="Recorrido" />}
-        </ListItemButton> */}
+        </ListItemButton>
         {/* Submenú Reportes */}
         <ListItemButton sx={itemStyle} onClick={() => handleToggle('reportes')}>
           <ListItemIcon sx={iconStyle}><BarChart /></ListItemIcon>

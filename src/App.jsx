@@ -9,7 +9,7 @@ import Perfil from './pages/clientes/perfil/Perfil';
 import Productos from './pages/productos/Productos';
 import Creditos from './pages/creditos/Creditos';
 import Caja from './pages/caja/Caja';
-import Gastos from './pages/gastos/Gastos';
+import Recorrido from './pages/recorrido/Recorrido'
 import General from './pages/general/General';
 import Oficinas from './pages/oficinas/Oficinas';
 import Rutas from './pages/rutas/Rutas';
@@ -92,7 +92,7 @@ const App = () => {
               <Route path="/productos" element={<Productos />} />
               <Route path="/creditos" element={<Creditos />} />
               <Route path="/caja" element={<Caja />} />
-              {/* <Route path="/gastos" element={<Gastos />} /> */}
+              <Route path="/recorrido" element={<Recorrido />} />
               <Route path="/reportes/estado-cuenta" element={<EstadoCuenta />} />
               <Route path="/reportes/creditos" element={<ReporteCreditos />} />
               <Route path="/reportes/ingresos-egresos" element={<ReporteIngresosEgresos />} />

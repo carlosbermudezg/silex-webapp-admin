@@ -96,6 +96,7 @@ export default function AddPermisos() {
                           checked={!!permisosSeleccionados[permiso]}
                           onChange={() => togglePermiso(permiso)}
                           color="primary"
+                          size='small'
                         />
                       }
                       label={<Typography sx={{ fontWeight: 500 }}>{name}</Typography>}

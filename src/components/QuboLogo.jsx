@@ -12,10 +12,10 @@ const QuboLogo = ({mode}) => {
           background: isDarkMode ? 'linear-gradient(135deg, #64B5F6, #9575CD)' : 'linear-gradient(135deg, #64B5F6, #9575CD)', // Ajustamos el color según el tema
         }}
       >
-        <span style={{ color: isDarkMode ? '#FFF' : '#fafafa', fontSize:'32px', fontWeight:'bold' }}>A</span>
+        <span style={{ color: isDarkMode ? '#FFF' : '#fafafa', fontSize:'32px', fontWeight:'bold' }}>D</span>
       </div>
       <div style={styles.text}>
-        <span style={{ color: isDarkMode ? '#fafafa' : '#222' }}>utentic</span>
+        <span style={{ color: isDarkMode ? '#fafafa' : '#222' }}>racarys</span>
       </div>
     </div>
   );

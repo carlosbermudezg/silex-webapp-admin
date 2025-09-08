@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  TableContainer, Table, TableBody, TableCell, TableHead, TableRow, IconButton,
+  TableContainer, Table, TableBody, TableCell, TableHead, TableRow,
   Typography, Button, TextField, Pagination, Menu, MenuItem, Divider, Dialog,
   DialogActions, DialogContent, DialogContentText, DialogTitle, Box, InputLabel,
   FormControl, Select
@@ -12,7 +12,6 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import { useNavigate } from 'react-router-dom';
 
 
 import {
@@ -49,7 +48,6 @@ const StyledMenu = styled((props) => (
 }));
 
 export default function Usuarios() {
-  const navigate = useNavigate();
 
   const [nuevoUsuario, setNuevoUsuario] = React.useState({
     nombre: '',
@@ -241,11 +239,11 @@ export default function Usuarios() {
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="tabla de usuarios">
                     <TableHead>
                         <TableRow>
-                        <TableCell>Nombre y Apellidos</TableCell>
-                        <TableCell>Correo</TableCell>
-                        <TableCell>Rol</TableCell>
-                        <TableCell>Estado</TableCell>
-                        <TableCell>Acciones</TableCell>
+                          <TableCell>Nombre y Apellidos</TableCell>
+                          <TableCell>Correo</TableCell>
+                          <TableCell>Rol</TableCell>
+                          <TableCell>Estado</TableCell>
+                          <TableCell>Acciones</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -256,41 +254,41 @@ export default function Usuarios() {
                             <TableCell>{usuario.tipo}</TableCell>
                             <TableCell><Chip label={usuario.estado}  color={ usuario.estado === 'activo' ? 'success' : 'warning' } /></TableCell>
                             <TableCell>
-                            <Button
-                                size="small"
-                                variant="contained"
-                                disableElevation
-                                onClick={(e) => {
-                                setSelectedUsuario({...usuario, contrasena: "", securityCode: ""})
-                                handleClick(e);
-                                }}
-                                endIcon={<KeyboardArrowDownIcon />}
-                            >
-                                <SettingsIcon />
-                            </Button>
-                            <StyledMenu
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleClose}
-                            >
-                                <MenuItem onClick={() =>  {
-                                setOpenModalEditar(true)
-                                handleClose() 
-                                }}>
-                                <EditIcon /> Editar
-                                </MenuItem>
-                                <Divider />
-                                {selectedUsuario?.estado === 'activo' && (
-                                <MenuItem onClick={() => { handleArchivarUsuario(selectedUsuario.id); handleClose(); }}>
-                                    <ArchiveIcon /> Archivar
-                                </MenuItem>
-                                )}
-                                {selectedUsuario?.estado === 'archivado' && (
-                                <MenuItem onClick={() => { handleDesarchivarUsuario(selectedUsuario.id); handleClose(); }}>
-                                    <ArchiveIcon /> Desarchivar
-                                </MenuItem>
-                                )}
-                            </StyledMenu>
+                              <Button
+                                  size="small"
+                                  variant="contained"
+                                  disableElevation
+                                  onClick={(e) => {
+                                  setSelectedUsuario({...usuario, contrasena: "", securityCode: ""})
+                                  handleClick(e);
+                                  }}
+                                  endIcon={<KeyboardArrowDownIcon />}
+                              >
+                                  <SettingsIcon />
+                              </Button>
+                              <StyledMenu
+                                  anchorEl={anchorEl}
+                                  open={open}
+                                  onClose={handleClose}
+                              >
+                                  <MenuItem onClick={() =>  {
+                                  setOpenModalEditar(true)
+                                  handleClose() 
+                                  }}>
+                                  <EditIcon /> Editar
+                                  </MenuItem>
+                                  <Divider />
+                                  {selectedUsuario?.estado === 'activo' && (
+                                  <MenuItem onClick={() => { handleArchivarUsuario(selectedUsuario.id); handleClose(); }}>
+                                      <ArchiveIcon /> Archivar
+                                  </MenuItem>
+                                  )}
+                                  {selectedUsuario?.estado === 'archivado' && (
+                                  <MenuItem onClick={() => { handleDesarchivarUsuario(selectedUsuario.id); handleClose(); }}>
+                                      <ArchiveIcon /> Desarchivar
+                                  </MenuItem>
+                                  )}
+                              </StyledMenu>
                             </TableCell>
                         </TableRow>
                         ))}

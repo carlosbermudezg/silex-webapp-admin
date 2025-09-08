@@ -752,8 +752,8 @@ export default function Caja() {
             {movimientos.map((mov) => {
               let color, simbol
               if(mov.category === 'ingreso'){
-                simbol = mov.monto <= 0 ? '-' : '+'
-                color = mov.monto <= 0 ? 'secondary' : 'success'
+                simbol = mov.monto <= 0 ? '' : '+'
+                color = mov.monto <= 0 ? 'primary' : 'success'
               }else if(mov.category === 'egreso'){
                 color = 'error'
               }

@@ -58,28 +58,28 @@ const styles = StyleSheet.create({
 });
 
 // Datos de ejemplo
-const data = [
-  {
-    fecha: "2025-05-03",
-    usuario: "Juan Pérez",
-    descripcion: "Pago de factura",
-    naturaleza: "Crédito",
-    cliente: 'Pedro Gomez',
-    monto: 250.0,
-    saldoAnterior: 1000.0,
-    saldo: 1250.0,
-  },
-  {
-    fecha: "2025-05-02",
-    usuario: "Ana Gómez",
-    descripcion: "Retiro de fondos",
-    cliente: 'Pedro Gomez',
-    naturaleza: "Débito",
-    monto: 300.0,
-    saldoAnterior: 1300.0,
-    saldo: 1000.0,
-  },
-];
+// const data = [
+//   {
+//     fecha: "2025-05-03",
+//     usuario: "Juan Pérez",
+//     descripcion: "Pago de factura",
+//     naturaleza: "Crédito",
+//     cliente: 'Pedro Gomez',
+//     monto: 250.0,
+//     saldoAnterior: 1000.0,
+//     saldo: 1250.0,
+//   },
+//   {
+//     fecha: "2025-05-02",
+//     usuario: "Ana Gómez",
+//     descripcion: "Retiro de fondos",
+//     cliente: 'Pedro Gomez',
+//     naturaleza: "Débito",
+//     monto: 300.0,
+//     saldoAnterior: 1300.0,
+//     saldo: 1000.0,
+//   },
+// ];
 
 const detalles = [
   ["ABONOS", "45,50"],
@@ -99,27 +99,19 @@ const totales = [
   ["TOTAL CAJA", "216,35"],
 ];
 
-export default function EstadoCuentaPDF({ desde, hasta }) {
+export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
 
   // const [data, setData] = useState([])
   const token = localStorage.getItem('token')
-  const oficinaId = localStorage.getItem('oficinaId')
-  const rutaId = localStorage.getItem('rutaId')
-
   const dateDesde = dayjs(desde).format('YYYY-MM-DD');
   const dateHasta = dayjs(hasta).format('YYYY-MM-DD');
+  const [data, setData] = useState([])
 
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}reportes/estado-cuenta`,
+        `${import.meta.env.VITE_API_URL}reportes/estado-cuenta?ruta=${ruta}&desde=${dateDesde}&hasta=${dateHasta}`,
         {
-          params: {
-            oficinaId,
-            rutaId,
-            desde: dateDesde,
-            hasta: dateHasta
-          },
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -127,7 +119,7 @@ export default function EstadoCuentaPDF({ desde, hasta }) {
       );
   
       console.log(response.data);
-      // setData(response.data);
+      setData(response.data);
     } catch (error) {
       console.error(error); // para debugging
       toast.error(error.response?.data?.message || "Error al obtener datos");
@@ -161,7 +153,7 @@ export default function EstadoCuentaPDF({ desde, hasta }) {
         </View>
 
         {/* Filas de datos */}
-        {data.map((item, rowIndex) => (
+        {/* {data.map((item, rowIndex) => (
           <View style={styles.tableRow} key={rowIndex}>
             {[item.fecha, item.usuario, item.descripcion, item.cliente, item.naturaleza, `$${item.monto.toFixed(2)}`, `$${item.saldo.toFixed(2)}`, `$${item.saldoAnterior.toFixed(2)}`].map((val, colIndex) => (
               <View
@@ -175,7 +167,7 @@ export default function EstadoCuentaPDF({ desde, hasta }) {
               </View>
             ))}
           </View>
-        ))}
+        ))} */}
       </View>
 
       <Text style={{ fontSize: 14, marginBottom: 10, marginTop: 10 }}>Resumen del Día</Text>
@@ -190,12 +182,12 @@ export default function EstadoCuentaPDF({ desde, hasta }) {
 
       <Text style={{ fontSize: 14, marginBottom: 10, marginTop: 10 }}>Totales</Text>
       <View style={styles.table}>
-        {totales.map(([key, value], idx) => (
+        {/* {totales.map(([key, value], idx) => (
           <View style={styles.row} key={idx}>
             <Text style={styles.cellKey}>{key}</Text>
             <Text style={styles.cellValue}>{value}</Text>
           </View>
-        ))}
+        ))} */}
       </View>
     </Page>
   </Document>
