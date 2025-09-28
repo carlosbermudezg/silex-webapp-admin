@@ -25,6 +25,12 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     padding: 4,
   },
+  redColor: {
+    color:'red'
+  },
+  greenColor: {
+    color:'green'
+  },
   tableColHeaderMov: {
     width: "14.28%",
     backgroundColor: "#999",
@@ -143,6 +149,7 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
         <View style={styles.table}>
           {/* Filas de datos */}
           {data.map((item, index) => {
+            console.log(item)
             return(
               <>
                 <View style={styles.tableRow}>
@@ -222,13 +229,6 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
                         styles.tableColHeaderMov
                       ]}
                     >
-                      <Text style={styles.tableCell}>Tipo</Text>
-                    </View>
-                    <View
-                      style={[
-                        styles.tableColHeaderMov
-                      ]}
-                    >
                       <Text style={styles.tableCell}>Fecha</Text>
                     </View>
                     <View
@@ -244,6 +244,13 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
                       ]}
                     >
                       <Text style={styles.tableCell}>Monto</Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.tableColHeaderMov,
+                      ]}
+                    >
+                      <Text style={styles.tableCell}>Saldo</Text>
                     </View>
                     <View
                       style={[
@@ -264,13 +271,6 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
                               styles.tableCol,
                             ]}
                           >
-                            <Text style={styles.tableCell}>{mov.tipo}</Text>
-                          </View>
-                          <View
-                            style={[
-                              styles.tableCol,
-                            ]}
-                          >
                             <Text style={styles.tableCell}>{dayjs(mov.createdAt).format("DD/MM/YYYY")}</Text>
                           </View>
                           <View
@@ -286,7 +286,17 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
                               styles.tableCol
                             ]}
                           >
-                            <Text style={styles.tableCell}>{mov.monto}</Text>
+                            <Text style={[
+                              styles.tableCell,
+                              mov.category === 'ingreso' ? styles.greenColor : styles.redColor
+                            ]}>{mov.category === 'ingreso' ? '+' : '-' }{mov.monto}</Text>
+                          </View>
+                          <View
+                            style={[
+                              styles.tableCol,
+                            ]}
+                          >
+                            <Text style={styles.tableCell}>{mov.saldo}</Text>
                           </View>
                           <View
                             style={[
