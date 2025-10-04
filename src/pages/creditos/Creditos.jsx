@@ -242,7 +242,7 @@ const Creditos = () => {
                       <TableCell>{credito.frecuencia_pago}</TableCell>
                       <TableCell>$ {(credito.monto)}</TableCell>
                       <TableCell>$ {(Number(credito.monto) + Number(credito.monto_interes_generado)).toFixed(2)}</TableCell>
-                      <TableCell>$ {(Number(credito.saldo_capital) + Number(credito.saldo_interes)).toFixed(2)}</TableCell>
+                      <TableCell>$ {credito.saldo}</TableCell>
                       <TableCell>{new Date(credito.fechaVencimiento).toLocaleDateString()}</TableCell>
                       <TableCell><Chip label={estado} color={color} /></TableCell>
                       <TableCell>

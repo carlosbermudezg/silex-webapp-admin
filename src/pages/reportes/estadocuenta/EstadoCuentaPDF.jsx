@@ -82,8 +82,26 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderBottomWidth: 1,
     borderColor: "#000",
+    color: "#fff",
+    backgroundColor: "#333",
+    fontSize: 10,
+  },
+  cellKeySecondary: {
+    width: "70%",
+    padding: 5,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "#000",
     backgroundColor: "#f0f0f0",
     fontSize: 10,
+  },
+  cellValuePrimary: {
+    width: "30%",
+    padding: 5,
+    borderBottomWidth: 1,
+    borderColor: "#000",
+    fontSize: 10,
+    fontWeight: 'bold'
   },
   cellValue: {
     width: "30%",
@@ -94,30 +112,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const detalles = [
-  ["ABONOS", "45,70"],
-  ["DESEMBOLSOS", "0,00"],
-  ["CANTIDAD CRÉDITOS A COBRAR", "109"],
-  ["CANTIDAD CRÉDITOS VISITADOS", "47"],
-  ["CANTIDAD CRÉDITOS QUE ABONARON", "8"],
-  ["CANTIDAD CRÉDITOS SIN VISITAR", "62"],
-  ["CANTIDAD ABONOS ANULADOS DEL DÍA", "0"],
-  ["VALOR TOTAL A COBRAR", "433,87"],
-  ["VALOR TOTAL QUE PAGARON", "45,50"],
-];
-
-const totales = [
-  ["TOTAL INGRESOS", "0,00"],
-  ["TOTAL EGRESOS", "0,00"],
-  ["TOTAL CAJA", "216,35"],
-];
-
 export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
 
   const token = localStorage.getItem('token')
   const dateDesde = dayjs(desde).format('YYYY-MM-DD');
   const dateHasta = dayjs(hasta).format('YYYY-MM-DD');
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
+  const [totalIngresos, setTotalIngresos] = useState(0);
+  const [totalEgresos, setTotalEgresos] = useState(0);
+  const [saldoInicial, setSaldoInicial] = useState(0);
+  const [totalAbonos, setTotalAbonos] = useState(0);
+  const [totalAportes, setTotalAportes] = useState(0);
+  const [totalGastos, setTotalGastos] = useState(0);
+  const [totalCreditos, setTotalCreditos] = useState(0);
+  const [totalAnulaciones, setTotalAnulaciones] = useState(0);
 
   const fetchData = async () => {
     try {
@@ -129,7 +137,16 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
           }
         }
       );
+      console.log(response.data)
       setData(response.data);
+      setTotalAbonos(response.data.reduce((prev, curr) => { return prev + curr.totalAbonos }, 0))
+      setTotalAportes(response.data.reduce((prev, curr) => { return prev + curr.totalAportes }, 0))
+      setTotalAnulaciones(response.data.reduce((prev, curr) => { return prev + curr.totalAnulaciones }, 0))
+      setTotalCreditos(response.data.reduce((prev, curr) => { return prev + curr.totalCreditos }, 0))
+      setTotalGastos(response.data.reduce((prev, curr) => { return prev + curr.totalGastos }, 0))
+      setTotalIngresos(response.data.reduce((prev, curr) => { return prev + curr.totalIngresos }, 0))
+      setTotalEgresos(response.data.reduce((prev, curr) => { return prev + curr.totalEgresos }, 0))
+      setSaldoInicial( Number(response.data[0].monto_inicial) )
     } catch (error) {
       console.error(error);
       toast.error(error.response?.data?.message || "Error al obtener datos");
@@ -140,6 +157,24 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
     fetchData()
   },[])
 
+  const detalleIngresos = [
+    ["Total Ingresos", totalIngresos],
+    ["Saldo Inicial", saldoInicial],
+    ["Aportes", totalAportes],
+    ["Abonos", totalAbonos],
+  ];
+
+  const detalleEgresos = [
+    ["Total Egresos", totalEgresos],
+    ["Créditos", totalCreditos],
+    ["Anulaciones", totalAnulaciones],
+    ["Gastos", totalGastos],
+  ];
+  
+  const totales = [
+    ["Total Caja", totalIngresos + saldoInicial - totalEgresos],
+  ];
+
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={{ padding: 20 }}>
@@ -149,7 +184,6 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
         <View style={styles.table}>
           {/* Filas de datos */}
           {data.map((item, index) => {
-            console.log(item)
             return(
               <>
                 <View style={styles.tableRow}>
@@ -196,7 +230,7 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
                         index === 7 && styles.lastCol,
                       ]}
                     >
-                      <Text style={styles.tableCell}>{item.monto_inicial}</Text>
+                      <Text style={styles.tableCell}>$ {item.monto_inicial}</Text>
                     </View>
                     <View
                       style={[
@@ -204,7 +238,7 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
                         index === 7 && styles.lastCol,
                       ]}
                     >
-                      <Text style={styles.tableCell}>{item.monto_final}</Text>
+                      <Text style={styles.tableCell}>$ {item.monto_final}</Text>
                     </View>
                     <View
                       style={[
@@ -212,7 +246,7 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
                         index === 7 && styles.lastCol,
                       ]}
                     >
-                      <Text style={styles.tableCell}>{item.usuario_open}</Text>
+                      <Text style={styles.tableCell}>{ item.sistema ? 'Sistema' : item.usuario_open}</Text>
                     </View>
                     <View
                       style={[
@@ -289,14 +323,14 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
                             <Text style={[
                               styles.tableCell,
                               mov.category === 'ingreso' ? styles.greenColor : styles.redColor
-                            ]}>{mov.category === 'ingreso' ? '+' : '-' }{mov.monto}</Text>
+                            ]}>{mov.category === 'ingreso' ? '+' : '-' } $ {mov.monto}</Text>
                           </View>
                           <View
                             style={[
                               styles.tableCol,
                             ]}
                           >
-                            <Text style={styles.tableCell}>{mov.saldo}</Text>
+                            <Text style={styles.tableCell}>$ {mov.saldo}</Text>
                           </View>
                           <View
                             style={[
@@ -315,12 +349,18 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
           })}
         </View>
 
-        {/* <Text style={{ fontSize: 14, marginBottom: 10, marginTop: 10 }}>Resumen del Día</Text>
+        <Text style={{ fontSize: 14, marginBottom: 10, marginTop: 10 }}>Resumen General</Text>
         <View style={styles.table}>
-          {detalles.map(([key, value], idx) => (
+          {detalleIngresos.map(([key, value], idx) => (
             <View style={styles.row} key={idx}>
-              <Text style={styles.cellKey}>{key}</Text>
-              <Text style={styles.cellValue}>{value}</Text>
+              <Text style={ idx === 0 ? styles.cellKey : styles.cellKeySecondary }>{key}</Text>
+              <Text style={ idx === 0 ? styles.cellValuePrimary : styles.cellValue }>$ {value.toFixed(2)}</Text>
+            </View>
+          ))}
+          {detalleEgresos.map(([key, value], idx) => (
+            <View style={styles.row} key={idx}>
+              <Text style={ idx === 0 ? styles.cellKey : styles.cellKeySecondary }>{key}</Text>
+              <Text style={ idx === 0 ? styles.cellValuePrimary : styles.cellValue }>$ {value.toFixed(2)}</Text>
             </View>
           ))}
         </View>
@@ -330,10 +370,10 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
           {totales.map(([key, value], idx) => (
             <View style={styles.row} key={idx}>
               <Text style={styles.cellKey}>{key}</Text>
-              <Text style={styles.cellValue}>{value}</Text>
+              <Text style={styles.cellValuePrimary}>$ {value.toFixed(2)}</Text>
             </View>
           ))}
-        </View> */}
+        </View>
       </Page>
     </Document>
   );
