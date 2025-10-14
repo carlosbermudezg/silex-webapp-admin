@@ -8,6 +8,7 @@ import Clientes from './pages/clientes/Clientes';
 import Perfil from './pages/clientes/perfil/Perfil';
 import Productos from './pages/productos/Productos';
 import Creditos from './pages/creditos/Creditos';
+import InfoCredito from './pages/creditos/info/InfoCredito';
 import Caja from './pages/caja/Caja';
 import Recorrido from './pages/recorrido/Recorrido'
 import General from './pages/general/General';
@@ -91,6 +92,7 @@ const App = () => {
               <Route path="/clientes/perfil/:id" element={<Perfil />} />
               <Route path="/productos" element={<Productos />} />
               <Route path="/creditos" element={<Creditos />} />
+              <Route path="/creditos/info/:id" element={<InfoCredito />} />
               <Route path="/caja" element={<Caja />} />
               <Route path="/recorrido" element={<Recorrido />} />
               <Route path="/reportes/estado-cuenta" element={<EstadoCuenta />} />

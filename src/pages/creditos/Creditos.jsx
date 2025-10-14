@@ -74,9 +74,6 @@ const Creditos = () => {
     return fechaA - fechaB; // Orden ascendente (más antiguo primero)
   });
 
-  console.log(creditos1)
-
-
   const token = localStorage.getItem('token');
 
   const handlePageChange = (_, value) => setPage(value);
@@ -98,7 +95,6 @@ const Creditos = () => {
 
   const fetchCreditos = async () => {
     try {
-        console.log(page)
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}creditos?searchTerm=${encodeURIComponent(searchTerm)}&page=${page}&limit=10&oficinaId=${oficinaId}&rutaId=${rutaId}`,
         {
@@ -107,7 +103,6 @@ const Creditos = () => {
           },
         }
       );
-      console.log(res)
       setCreditos(res.data.creditos || []);
       setTotalPages(res.data.totalPages || 1);
     } catch (err) {
@@ -215,7 +210,6 @@ const Creditos = () => {
                   </TableRow>
                 ) : (
                   creditos.map((credito) => {
-                    console.log(credito)
                     let estado;
                     let color;
                     const fecha = new Date(credito.fechaVencimiento); // la fecha que quieres comparar
@@ -236,7 +230,7 @@ const Creditos = () => {
                     }
                     return(
                     <TableRow key={credito.id}>
-                      <TableCell>CR{credito.id}</TableCell>
+                      <TableCell><Link to={`/creditos/info/${credito.id}`}>CR{credito.id}</Link></TableCell>
                       <TableCell><Link to={`/clientes/perfil/${credito.clienteId}`}>{credito.cliente?.nombres}</Link></TableCell>
                       <TableCell>{credito.ruta?.nombre}</TableCell>
                       <TableCell>{credito.frecuencia_pago}</TableCell>

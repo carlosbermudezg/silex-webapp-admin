@@ -137,7 +137,6 @@ export default function EstadoCuentaPDF({ desde, hasta, ruta }) {
           }
         }
       );
-      console.log(response.data)
       setData(response.data);
       setTotalAbonos(response.data.reduce((prev, curr) => { return prev + curr.totalAbonos }, 0))
       setTotalAportes(response.data.reduce((prev, curr) => { return prev + curr.totalAportes }, 0))
