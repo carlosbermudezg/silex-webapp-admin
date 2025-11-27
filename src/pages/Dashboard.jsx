@@ -13,7 +13,7 @@ import Chip from '@mui/material/Chip';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import {TableContainer, TableHead, TableRow, TableBody, TableCell, Pagination, Paper, Table, TextField, Divider} from '@mui/material';
+import { TableContainer, TableHead, TableRow, TableBody, TableCell, Pagination, Paper, Table, TextField, Divider } from '@mui/material';
 import { Select, MenuItem, InputLabel, Button } from '@mui/material';
 import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import SaveIcon from '@mui/icons-material/Save';
@@ -62,7 +62,7 @@ export default function Dashboard() {
   const token = localStorage.getItem('token');
   const rutaId = useLocalStorageValue('rutaId');
 
-  const getDataDash = async()=>{
+  const getDataDash = async () => {
     try {
       const res = await axios.get(`${API_BASE}creditos/datadash?id=${rutaId}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -90,11 +90,11 @@ export default function Dashboard() {
         "turno_id": null,
         "recaudacion": "0",
         "gastos": "0"
-    })
+      })
     }
   }
 
-  const getDataDashBars = async()=>{
+  const getDataDashBars = async () => {
     try {
       const res = await axios.get(`${API_BASE}creditos/datadashbars?id=${rutaId}&q=${frecuencia}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -110,11 +110,11 @@ export default function Dashboard() {
         "recaudo": "0",
         "ingresos": "0",
         "egresos": "0"
-    }])
+      }])
     }
   }
 
-  const getTurnoRutas = async()=>{
+  const getTurnoRutas = async () => {
     try {
       const res = await axios.get(`${API_BASE}caja/turnos-abiertos?page=${page}&limit=10&search=${search}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -133,38 +133,38 @@ export default function Dashboard() {
     {
       id: 1,
       title: 'Créditos Activos',
-      description: <Chip color="default" label={`${dataDash.total_impagos}`} sx={{fontSize:'24px'}} variant="outlined" />,
-      icon: <CreditScoreIcon color='default' sx={{fontSize:'48px'}} />,
+      description: <Chip color="default" label={`${dataDash.creditos_activos}`} sx={{ fontSize: '24px' }} variant="outlined" />,
+      icon: <CreditScoreIcon color='default' sx={{ fontSize: '48px' }} />,
     },
     {
       id: 2,
       title: 'Morosos',
-      description: <Chip color="warning" label={morosos} c variant="outlined" sx={{fontSize:'24px'}} />,
-      icon: <PersonOffIcon color='warning' sx={{fontSize:'48px'}}/>,
+      description: <Chip color="warning" label={morosos} c variant="outlined" sx={{ fontSize: '24px' }} />,
+      icon: <PersonOffIcon color='warning' sx={{ fontSize: '48px' }} />,
     },
     {
       id: 3,
       title: 'Cartera',
-      description: <Chip color="secondary" label={`$ ${dataDash.cartera}`} variant="outlined" sx={{fontSize:'24px'}} />,
-      icon: <AttachMoneyIcon color='secondary' sx={{fontSize:'48px'}} />,
+      description: <Chip color="secondary" label={`$ ${dataDash.cartera_total}`} variant="outlined" sx={{ fontSize: '24px' }} />,
+      icon: <AttachMoneyIcon color='secondary' sx={{ fontSize: '48px' }} />,
     },
     {
       id: 4,
       title: 'Caja',
-      description: <Chip color="info" label={`$ ${dataDash.saldo_caja}`} variant="outlined" sx={{fontSize:'24px'}} />,
-      icon: <AttachMoneyIcon color='info' sx={{fontSize:'48px'}} />
+      description: <Chip color="info" label={`$ ${dataDash.saldo_caja}`} variant="outlined" sx={{ fontSize: '24px' }} />,
+      icon: <AttachMoneyIcon color='info' sx={{ fontSize: '48px' }} />
     },
     {
       id: 5,
       title: 'Gastos',
-      description: <Chip color="error" label={dataDash.gastos} variant="outlined" sx={{fontSize:'24px'}}/>,
-      icon: <PersonOffIcon color='error' sx={{fontSize:'48px'}} />,
+      description: <Chip color="error" label={dataDash.gastos_hoy} variant="outlined" sx={{ fontSize: '24px' }} />,
+      icon: <PersonOffIcon color='error' sx={{ fontSize: '48px' }} />,
     },
     {
       id: 6,
       title: 'Recaudación',
-      description: <Chip color="success" label={dataDash.recaudacion} variant="outlined" sx={{fontSize:'24px'}} />,
-      icon: <AttachMoneyIcon color='success' sx={{fontSize:'48px'}} />
+      description: <Chip color="success" label={dataDash.recaudacion_hoy} variant="outlined" sx={{ fontSize: '24px' }} />,
+      icon: <AttachMoneyIcon color='success' sx={{ fontSize: '48px' }} />
     }
   ];
 
@@ -176,22 +176,22 @@ export default function Dashboard() {
       "porcentaje": (Number(dataDash.creditos_atrasados) / Number(dataDash.total_impagos) * 100).toFixed(2)
     },
     {
-        "label": "Alto riesgo",
-        "value": dataDash.creditos_alto_riesgo,
-        "cartera": dataDash.cartera_alto_riesgo || 0,
-        "porcentaje": (Number(dataDash.creditos_alto_riesgo) / Number(dataDash.total_impagos) * 100).toFixed(2)
+      "label": "Alto riesgo",
+      "value": dataDash.creditos_alto_riesgo,
+      "cartera": dataDash.cartera_alto_riesgo || 0,
+      "porcentaje": (Number(dataDash.creditos_alto_riesgo) / Number(dataDash.total_impagos) * 100).toFixed(2)
     },
     {
-        "label": "Vencidos",
-        "value": dataDash.creditos_vencidos,
-        "cartera": dataDash.cartera_vencidos || 0,
-        "porcentaje": (Number(dataDash.creditos_vencidos) / Number(dataDash.total_impagos) * 100).toFixed(2)
+      "label": "Vencidos",
+      "value": dataDash.creditos_vencidos,
+      "cartera": dataDash.cartera_vencidos || 0,
+      "porcentaje": (Number(dataDash.creditos_vencidos) / Number(dataDash.total_impagos) * 100).toFixed(2)
     },
     {
-        "label": "Al día",
-        "value": dataDash.creditos_al_dia,
-        "cartera": dataDash.cartera_al_dia || 0,
-        "porcentaje": (Number(dataDash.creditos_al_dia) / Number(dataDash.total_impagos) * 100).toFixed(2)
+      "label": "Al día",
+      "value": dataDash.creditos_al_dia,
+      "cartera": dataDash.cartera_al_dia || 0,
+      "porcentaje": (Number(dataDash.creditos_al_dia) / Number(dataDash.total_impagos) * 100).toFixed(2)
     }
   ]
 
@@ -222,25 +222,25 @@ export default function Dashboard() {
     return texto.charAt(0).toUpperCase() + texto.slice(1);
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getTurnoRutas()
-  },[search, page])
+  }, [search, page])
 
   useEffect(() => {
     if (!dataDashBars) return;
-  
+
     const creditos = [];
     const interes = [];
     const recaudo = [];
     const ingresos = [];
     const egresos = [];
     const labels = [];
-  
+
     dataDashBars.forEach((element) => {
       const fecha = new Date(element.fecha);
       const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
       const diaSemana = diasSemana[fecha.getDay()];
-  
+
       creditos.push(element.total_creditos);
       interes.push(element.total_interes);
       recaudo.push(element.recaudo);
@@ -248,22 +248,22 @@ export default function Dashboard() {
       egresos.push(element.egresos);
       labels.push(diaSemana);
     });
-  
+
     setCreditosData(creditos);
     setInteresData(interes);
     setRecaudoData(recaudo);
     setIngresosData(ingresos);
     setEgresosData(egresos);
     setXLabels(labels);
-  }, [dataDashBars]);  
+  }, [dataDashBars]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getDataDash()
-  },[rutaId])
+  }, [rutaId])
 
-  useEffect(()=>{
+  useEffect(() => {
     getDataDashBars()
-  },[rutaId, frecuencia])
+  }, [rutaId, frecuencia])
 
   function PieCenterLabel({ children }) {
     const { width, height, left, top } = useDrawingArea();
@@ -302,17 +302,17 @@ export default function Dashboard() {
                       },
                     }}
                   >
-                    <CardContent sx={{ height: '100%', display:'flex', gap:3 }}>
+                    <CardContent sx={{ height: '100%', display: 'flex', gap: 3 }}>
                       <section>
                         {card.icon}
                       </section>
                       <section>
-                      <Typography variant="body1" component="div">
-                        {card.title}
-                      </Typography>
-                      <Typography variant="body1" color="text.secondary">
-                        {card.description}
-                      </Typography>
+                        <Typography variant="body1" component="div">
+                          {card.title}
+                        </Typography>
+                        <Typography variant="body1" color="text.secondary">
+                          {card.description}
+                        </Typography>
                       </section>
                     </CardContent>
                   </CardActionArea>
@@ -325,32 +325,32 @@ export default function Dashboard() {
           <Grid item size={6}>
             <Card variant="outlined">
               <CardContent>
-              <PieChart
-                height={268}
-                colors={['#00A7E1', '#E28413', '#F45B69', '#19647E', '#F45B69']}
-                slotProps={{
-                  tooltip: { trigger: 'item' }
-                }}
-                series={[{
-                  data: data.map((item) => ({
-                    label: item.label,
-                    id: item.label,
-                    value: item.value,
-                  })),
-                  paddingAngle: 1,
-                  cornerRadius: 5,
-                  innerRadius: radius,
-                  arcLabel: (param)=> `${param.value}`,
-                  arcLabelMinAngle: 10,
-                  valueFormatter: (v, { dataIndex }) => {
-                    const item = data[dataIndex];
-                    return `• Créditos: ${item.value} • Cartera: $${item.cartera.toLocaleString()} • ${item.porcentaje}%`;
-                  }
-                }]}
-                skipAnimation={skipAnimation}
-              >
-                <PieCenterLabel>Créditos</PieCenterLabel>
-              </PieChart>
+                <PieChart
+                  height={268}
+                  colors={['#00A7E1', '#E28413', '#F45B69', '#19647E', '#F45B69']}
+                  slotProps={{
+                    tooltip: { trigger: 'item' }
+                  }}
+                  series={[{
+                    data: data.map((item) => ({
+                      label: item.label,
+                      id: item.label,
+                      value: item.value,
+                    })),
+                    paddingAngle: 1,
+                    cornerRadius: 5,
+                    innerRadius: radius,
+                    arcLabel: (param) => `${param.value}`,
+                    arcLabelMinAngle: 10,
+                    valueFormatter: (v, { dataIndex }) => {
+                      const item = data[dataIndex];
+                      return `• Créditos: ${item.value} • Cartera: $${item.cartera.toLocaleString()} • ${item.porcentaje}%`;
+                    }
+                  }]}
+                  skipAnimation={skipAnimation}
+                >
+                  <PieCenterLabel>Créditos</PieCenterLabel>
+                </PieChart>
               </CardContent>
             </Card>
           </Grid>
@@ -362,12 +362,12 @@ export default function Dashboard() {
                 <InputLabel>Frecuencia</InputLabel>
                 <Select
                   value={frecuencia}
-                  onChange={(e)=> setFrecuencia(e.target.value)}
+                  onChange={(e) => setFrecuencia(e.target.value)}
                   size='small'
-                  sx={{width:'100%', marginBottom:2}}
-                  >
-                      <MenuItem key={1} value="diario">Diario</MenuItem>
-                      <MenuItem key={2} value="semanal">Semanal</MenuItem>
+                  sx={{ width: '100%', marginBottom: 2 }}
+                >
+                  <MenuItem key={1} value="diario">Diario</MenuItem>
+                  <MenuItem key={2} value="semanal">Semanal</MenuItem>
                 </Select>
                 {(xLabels.length > 0) ? (
                   <BarChart
@@ -422,7 +422,7 @@ export default function Dashboard() {
             />
           </Grid>
 
-          <Grid size={12}>  
+          <Grid size={12}>
             <TableContainer component={Paper}>
               <Table size='small'>
                 <TableHead>
@@ -440,7 +440,7 @@ export default function Dashboard() {
                     const estado = ruta.estado === 'abierta' ? 'Abierta' : "Bloqueada"
                     const color = ruta.estado === 'abierta' ? 'success' : "error"
                     const fecha = formatearFecha(ruta.fecha_apertura)
-                    return(
+                    return (
                       <TableRow key={ruta.ruta_id}>
                         <TableCell width={200}>{ruta.ruta_nombre}</TableCell>
                         <TableCell><Chip size='small' color='primary' label={`$ ${ruta.monto_inicial}`}></Chip></TableCell>
